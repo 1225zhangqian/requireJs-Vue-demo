@@ -1,0 +1,40 @@
+[{
+		"value": "210000000000",
+		"name": "公安厅",
+		"categories": [{
+			"name": "公安厅部门一",
+			"value": "javascript:alert('公安厅部门一')"
+		}, {
+			"name": "公安厅部门二",
+			"value": "javascript:alert('公安厅部门二')"
+		}, {
+			"name": "公安厅部门三",
+			"value": "javascript:alert('公安厅部门三')"
+		}]
+	}, {
+		"value": "34010300000000000000",
+		"name": "证明项",
+		"categories": [{
+			"name": "庐阳区部门一",
+			"value": "javascript:alert('庐阳区部门一')"
+		}, {
+			"name": "庐阳区部门二",
+			"value": "javascript:alert('庐阳区部门二')"
+		}, {
+			"name": "庐阳区部门三",
+			"value": "javascript:alert('庐阳区部门三')"
+		}]
+	}, {
+		"value": "3401011100000000",
+		"name": "市工商局",
+		"categories": [{
+			"name": "工商局部门一",
+			"value": "javascript:alert('工商局部门一')"
+		}, {
+			"name": "工商局部门二",
+			"value": "javascript:alert('工商局部门二')"
+		}, {
+			"name": "工商局部门三",
+			"value": "javascript:alert('工商局部门三')"
+		}]
+	}]

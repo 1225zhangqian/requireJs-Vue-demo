@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>my-project</title>
+  </head>
+  <body>
+  <h4>声明式渲染</h4>
+    <div class="app">
+    	<p>Original message: "{{ message }}"</p>
+  		<p>Computed reversed message: "{{ reversedMessage }}"</p>
+	<div >
+		<h3>data 取值 (stuInfo)</h3>
+		<table class="grid-table" cellspacing="0">
+
+			<thead>
+				<tr>
+					<th>编号</th> 
+					<th>姓名</th>
+					<th>学号</th>
+					<th>年级</th>
+					<th>班级</th> 
+				</tr>
+			</thead>
+			<tbody  >
+				<tr v-for="(item,index) in stuInfo ">
+					<td> {{index+1}}</td>
+				    <td>{{item.name}}</td>
+				    <td>{{item.number}}</td>
+				    <td>{{item.grade}}</td>
+				    <td>{{item.classes}}</td> 
+				</tr>
+			</tbody>
+		</table>
+		<button v-on:click="changeStudent">changeStudent</button>
+		<h3>mounted 取值  (stuInfoMounted)</h3>
+		<p>只执行一次</p>
+		<table class="grid-table" cellspacing="0">
+
+			<thead>
+				<tr>
+					<th>编号</th> 
+					<th>姓名</th>
+					<th>学号</th>
+					<th>年级</th>
+					<th>班级</th> 
+				</tr>
+			</thead>
+			<tbody  >
+				<tr v-for="(item,index) in stuInfoMounted ">
+					<td> {{index+1}}</td>
+				    <td>{{item.name}}</td>
+				    <td>{{item.number}}</td>
+				    <td>{{item.grade}}</td>
+				    <td>{{item.classes}}</td> 
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<h3>computed 取值  (stuInfos)</h3>
+	<ul >
+		<li v-for="item in stuInfos ">
+			<span v-for="(value , key) in item">{{key}} : {{value}}</span>
+		</li>
+	</ul>
+	<button v-on:click="toggleStuInfos">toggleStuInfos</button>
+	 <p>
+	    Ask a yes/no question:
+	    <input v-model="question">
+	</p>
+	 <p>{{answer}}</p>
+	<yhd-div></yhd-div>
+	<v-card :vdata="stuInfos" ></v-card>
+    </div>
+  </body>
+</html>
+<script type="text/javascript" src="../public/js/plugins/vue/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script> 
+<script>
+var YHD = Vue.extend({ template:'<p>欢迎使用组件</p>' });
+Vue.component('yhd-div',YHD);
+	//卡片组件
+	Vue.component('v-card', {
+	  // todo-item 组件现在接受一个
+	  // "prop"，类似于一个自定义特性。
+	  // 这个 prop 名为 todo。
+	  props: ['vdata'],
+	  template: `<div class="common-content za-list">
+				    <div class="cols-xs-11" v-for="(item, index) in vdata">
+                        <i class="za-icon icon-1"></i>
+                        <div class="list-title">
+                          刑侦
+                        </div>
+                        <div class="list-content">
+                          <div class="cols-xs-18">
+                            <span class="name">资源总量：</span>
+                            <span class="value">{{item.totalResources}}</span>
+                          </div>
+                          <div class="cols-xs-18">
+                            <span class="name">今日增量：</span>
+                            <span class="value">{{item.todayIncremental}}</span>
+                          </div>
+                          <div class="cols-xs-18">
+                            <span class="name">异常次数：</span>
+                            <span class="value">{{item.abnormalNumber}}</span>
+                          </div>
+                          <div class="cols-xs-18">
+                            <span class="name">资源数量：</span>
+                            <span class="value">{{item.resourcesNumber}}</span>
+                          </div>
+                          <div class="cols-xs-36">
+                            <span class="name">最后更新时间：</span>
+                            <span class="value">{{item.LastUpdateTime}}</span>
+                          </div>
+                        </div>
+                      </div>
+				</div>`
+	}) 
+var vm = new Vue({
+  el: '.app',
+  data: {
+    message: 'Hello Vue.js',
+    a: 1, 
+    stuInfo:[{
+			name: '张三',
+			number: '001',
+			grade: '大一',
+			classes: '计一',
+		}, {
+			name: '张三',
+			number: '002',
+			grade: '大一',
+			classes: '计一',
+		}, {
+			name: '张三',
+			number: '003',
+			grade: '大一',
+			classes: '计一',
+		}, {
+			name: '张三',
+			number: '004',
+			grade: '大一',
+			classes: '计一',
+		}],
+	stuInfoMounted:[],
+	stuInfoComputed:[],
+	toggleStuInfosFlag: false,
+	question: '',
+    answer: `I cannot give you an answer until you ask a question!`
+  },
+    created: function () {
+    // `this` 指向 vm 实例
+    console.log('a is: ' + this.a )
+  },
+  methods: { 
+  	getStudent:function(){
+  		fetch(`http://localhost:8008/public/mock/studentInfo.json`)
+			.then((response) => response.json())
+			.then((data) => {
+			    this.stuInfoMounted  = data.result.data;
+			    this.stuInfoComputed = data.result.data;
+			})	
+  	},
+  	changeStudent:function(){
+  		// axios.get('http://localhost:8008/public/mock/studentInfo.json')
+    //       .then(function (response) {
+    //         this.stuInfo = response.data.result.data
+    //         console.log(this.stuInfo)
+    //       })
+    //       .catch(function (error) {
+    //         //this.stuInfo = this.stuInfo
+    //         console.log('error')
+    //       })
+		fetch(`http://localhost:8008/public/mock/studentInfo.json`)
+			.then((response) => response.json())
+			.then((data) => {
+      			this.stuInfo  = data.result.data
+			})
+  	},
+  	toggleStuInfos:function(){
+  		this.toggleStuInfosFlag = !this.toggleStuInfosFlag;
+  		if(this.toggleStuInfosFlag){
+  			this.stuInfoComputed = this.stuInfo
+  		}else{
+  			this.stuInfoComputed = this.stuInfoMounted
+  		}
+  		
+  	},
+  	// `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+    // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+    // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+    // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+    // 请参考：https://lodash.com/docs#debounce
+    getAnswer: _.debounce(
+      function () {
+        if (this.question.indexOf('?') === -1) {
+          this.answer = 'Questions usually contain a question mark. ;-)'
+          return
+        }
+        this.answer = 'Thinking...'
+        var vm = this
+        axios.get('https://yesno.wtf/api')
+          .then(function (response) {
+            vm.answer = _.capitalize(response.data.answer)
+          })
+          .catch(function (error) {
+            vm.answer = 'Error! Could not reach the API. ' + error
+          })
+      },
+      // 这是我们为判定用户停止输入等待的毫秒数
+      500
+    )
+  },
+ computed: {
+    stuInfos: function () {
+		return this.stuInfoComputed;
+    },
+    reversedMessage: function () {
+      // `this` 指向 vm 实例
+      return this.message.split('').reverse().join('')
+    }
+  },
+ watch: {
+	// 如果 `question` 发生改变，这个函数就会运行
+    question: function (newQuestion, oldQuestion) {
+      this.answer = 'Waiting for you to stop typing...'
+      this.getAnswer()
+    }
+  },
+	mounted: function() {            
+	 	this.getStudent ()  
+	}
+})
+
+</script>

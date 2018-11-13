@@ -1,0 +1,36 @@
+{
+	"falg": true,
+	"msg": "success",
+	"result": {
+		"total": 200,
+		"data": [{
+			"name": "李四",
+			"number": "001",
+			"grade": "大一",
+			"classes": "计一",
+			"id": "1",
+			"birthday": "2012/12/26"
+		}, {
+			"name": "李四",
+			"number": "002",
+			"grade": "大一",
+			"classes": "计一",
+			"id": "2",
+			"birthday": "2011/11/26"
+		}, {
+			"name": "李四",
+			"number": "003",
+			"grade": "大一",
+			"classes": "计一",
+			"id": "3",
+			"birthday": "2011/08/26"
+		}, {
+			"name": "李四",
+			"number": "004",
+			"grade": "大一",
+			"classes": "计一",
+			"id": "4",
+			"birthday": "2013/02/26"
+		}]
+	}
+}

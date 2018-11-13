@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>人员管理</title>
+    <link href="../public/js/plugins/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../public/js/plugins/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <link href="../public/js/plugins/selectpage/selectpage.css" rel="stylesheet">
+    <style type="text/css">
+      body{
+        background-color: #fff;
+      }
+      .form-horizontal .control-label {
+          padding-right: 5px;
+      }
+      .table>thead>tr>th {
+        background: #e0f0ff;
+      }
+      .btn {
+          margin-right: 8px;
+      }
+      .nav-tabs{
+        border-bottom: none;
+      }
+      .nav>li>a {
+          padding: 2px 16px;
+      }
+      .ant-tag{
+        width: 90px;
+        height: 25px;
+        line-height: 25px;
+        margin: 8px 0;
+      }
+      .person-tips-bg{
+        background-image: url(../public/img/person-tips-bg.png);
+        text-indent: 15px;
+      }
+      .list-tab-wrap{
+        padding: 15px 10px;
+        border-bottom: 1px solid #ade5ff;
+      }
+      .list-group-warp{
+
+      }
+      .list-group-warp li{
+        margin: 0 0 10px 10px;
+      }
+      .list-tab-pic{
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        width:100%;
+        color: #fff;
+      }
+      .list-tab-msg-bg{
+        height: 50px;
+        width: 100%;
+        background: #372d2d;
+        position: absolute;
+        bottom: 0;
+        opacity: .4;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+      .list-tab-msg-wrap{
+        padding: 0 5px;
+        position: absolute;
+        bottom: 5px;
+        width: 100%;
+        text-align: center;
+      }
+      .list-tab-name{
+        float: left;
+        margin-top: 5px;
+        display: inline-block;
+        min-width: 50px;
+        max-width: 70px;
+        height: 22px;
+        line-height: 22px;
+      }
+      .list-tab-title{
+        float: right;
+        margin-top: 5px;
+        display: inline-block;
+        width: calc(100% - 70px);
+        height: 22px;
+        line-height: 20px;
+      }
+      .ellipsis{    
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .list-badge{
+        height: 20px;
+        width: 20px;
+        display: inline-block;
+        background: #ed3f14;
+        border-radius: 10px;
+      }
+      .mr8{
+        margin: 4px 8px;
+      }
+      .sp_container{
+        width: 100% !important;
+      } 
+      .tab-content>.tab-pane { 
+        padding-top: 0;
+      }
+    </style>
+  </head>
+  <body >
+  <div id="rylistpage">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+            查询条件
+        </h3>
+      </div>
+      <div class="panel-body">
+          <form class="form-horizontal" role="form">
+              <div class="form-group">
+
+                  <label class="col-xs-1 control-label">姓名：</label>
+                  <div class="col-xs-3">
+                      <input type="text" name="name" class="form-control" placeholder="placeholder" v-model="query.name" >
+                  </div>
+                  <label class="col-xs-1 control-label">身份证：</label>
+                  <div class="col-xs-3">
+                      <input type="text" class="form-control" placeholder="placeholder" v-model="query.sfz">
+                  </div>
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <input type="text" name="ryxl" v-model="query.ryxl"  class="form-control zdSelectInput" zdlb="RYXL"> 
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-xs-1 control-label">更新时间：</label>
+                  <div class="col-xs-3">
+                    <input type="text" class="form-control ant-datepicker-input" placeholder="Select date" readonly id="demo7" name="gxsj"> 
+                  </div>
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <div class="radio-group">
+                        <label class="radio-wrapper">
+                            <span class="radio radio-checked">
+                              <input type="radio" name="radio-input" class="radio-input" value="">
+                              <span class="radio-inner"></span>
+                            </span>
+                            <span>全部</span>
+                        </label>
+                        <zq-radio class="zdRadio" zdlb="TZTB_FBZT">
+                        </zq-radio> 
+                      </div>
+                  </div>
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <div class="radio-group"> 
+                        <zq-radio class="zdRadio" zdlb="JDQX">
+                        </zq-radio>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <input type="text" class="form-control" placeholder="placeholder">
+                  </div>
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <div class="ant-select-tree">
+                          <input type="text" id="input1" class="form-control ant-select-tree-input" readonly="readonly" 
+                              placeholder="Please select">
+                          <div class="ant-select-tree-dropdown hidden">
+                              <input type="text" id="search1" class="form-control input-sm" placeholder="请输入名称">
+                              <ul id="tree1" class="ztree"></ul>
+                          </div>
+                      </div>
+                  </div>
+                  <label class="col-xs-1 control-label">xxx：</label>
+                  <div class="col-xs-3">
+                      <!-- <zq-ztree></zq-ztree> -->
+                  </div>
+              </div>
+              <div class="hidden"  id="collapse">
+                <div class="form-group " >
+                    <label class="col-xs-1 control-label">性别：</label>
+                    <div class="col-xs-3">
+                        <div class="radio-group">
+                            <zq-radio>
+                            </zq-radio> 
+                        </div>
+                    </div>
+                    <label class="col-xs-1 control-label">xxx：</label>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="placeholder">
+                    </div>
+                    <label class="col-xs-1 control-label">xxx：</label>
+                    <div class="col-xs-3">
+                      <zq-ztree></zq-ztree>
+                    </div>
+                </div>
+                <div class="form-group " >
+                    <label class="col-xs-1 control-label">xxx：</label>
+                    <div class="col-xs-3">
+                      <div class="radio-group">
+                        <zq-radio ></zq-radio>
+                        <!-- <zq-radio 
+                          v-for="item in groceryList"
+                          v-bind:vdata="item"
+                          v-bind:key="item.value"
+                          v-bind:class="[item.value==0 ? 'radio-checked' : '']">
+                        </zq-radio>  -->
+                      </div>
+                    </div>
+                    <label class="col-xs-1 control-label">xxx：</label>
+                    <div class="col-xs-3"> 
+                      <zq-select-input></zq-select-input>
+                    </div>
+                    <label class="col-xs-1 control-label">xxx：</label>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="placeholder">
+                    </div>
+                </div> 
+              </div>
+              <div class="pull-right">
+                  <a class="btn " @click="empty">
+                      <i class="anticon icon-search1"></i> empty
+                  </a>
+                  <a class="btn btn-primary" @click="search">
+                      <i class="anticon icon-search1"></i> Search
+                  </a>
+                  <a type="button" class="btn" id="showCollapse">
+                      Collapse
+                      <i class="anticon icon-down"></i>
+                  </a>
+              </div>
+          </form>
+      </div>
+    </div>
+    <div class="panel panel-default ">
+      <div class="panel-heading"> 
+        <span class="checkbox pull-left mr8">
+            <input type="checkbox" class="checkbox-input">
+            <span class="checkbox-inner"></span>
+        </span>
+        <button class="btn btn-primary btn-sm pull-left">新增</button>
+
+        <ul class="nav  nav-tabs">
+            <li class="pull-right">
+                <a href="#tab2" data-toggle="tab">列表</a>
+            </li>
+            <li class="active pull-right">
+                <a href="#tab1" data-toggle="tab">详情列表</a>
+            </li>
+        </ul>
+      </div>
+      <div class="tab-content panel-body">
+          <div id="tab1" class="tab-pane fade in active">  
+              <div class="row list-tab-wrap" v-for="item in ryListData">
+                <div class="col-xs-3">
+                  <span class="checkbox col-xs-1">
+                      <input type="checkbox" class="checkbox-input">
+                      <span class="checkbox-inner"></span>
+                  </span>
+                  <div class="col-xs-5">
+                    <img src="../public/img/ry.png" class="img-thumbnail">
+                    <div class="list-tab-pic">
+                      <div class="list-tab-msg-bg"></div>
+                      <div class="list-tab-msg-wrap">
+                        <p>
+                          <span class="list-tab-name ellipsis">{{item.name }}</span>
+                          <span class="list-tab-title ellipsis">
+                              <span class="list-badge">xx</span>
+                              <span class="list-badge">xx</span>
+                              <span class="list-badge">xx</span>
+                          </span>
+                        </p>
+                        <p>421123199412280403</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-4">
+                    <div class="ant-tag ant-tag-label-warning person-tips-bg">xx</div>
+                    <div class="ant-tag ant-tag-label-warning person-tips-bg">xx</div>
+                  </div>
+                </div>
+                <div class="col-xs-9">
+                  <ul class="col-xs-3 list-group-warp">
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                  </ul>
+                  <ul class="col-xs-3 list-group-warp">
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                  </ul>
+                  <ul class="col-xs-3 list-group-warp">
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                  </ul>
+                  <ul class="col-xs-3 list-group-warp">
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                    <li><span>姓名：</span><span>{{item.number }}</span></li>
+                  </ul>
+                </div>
+                <div class="list-tab-button-wrap pull-right">
+                  <button class="btn btn-default">编辑</button>
+                  <button class="btn btn-default">详情</button>
+                </div>
+                </div> 
+          </div>
+          <div id="tab2" class="tab-pane fade">
+            <table class="table table-hover table-ellipsis">
+              <thead>
+                  <tr>
+                      <th>
+                        <span class="checkbox">
+                            <input type="checkbox" class="checkbox-input">
+                            <span class="checkbox-inner"></span>
+                        </span>
+                      </th>
+                      <th>序号</th>
+                      <th>姓名</th>
+                      <th>身份证号</th>
+                      <th>人员级别</th>
+                      <th>人员细类</th>
+                      <th>所属群体</th>
+                      <th>户籍地区</th>
+                      <th>责任单位</th>
+                      <th>审批状态</th>
+                      <th>当前状态</th>
+                      <th>操作</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item,index) in ryListData">
+                    <td><span class="checkbox">
+                          <input type="checkbox" class="checkbox-input">
+                          <span class="checkbox-inner"></span>
+                      </span>
+                    </td>
+                    <td>{{index+1}}</td>
+                    <td>{{item.name }}</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>New York No. 1 Lake Park</td>
+                    <td>
+                        <a>Delete</a>
+                        <span class="divider"></span>
+                        <a>More actions</a>
+                    </td>
+                </tr> 
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+    </div>
+
+  </div>
+	
+  </body>
+</html>
+<script src="../public/js/config.js"></script>
+<script data-main="../public/js/apps/rylist/main.js" src="../public/js/plugins/require.js"></script>
